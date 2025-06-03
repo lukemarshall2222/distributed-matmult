@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  broker:
+    build:
+      context: ./broker
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000" # Expose broker's port 8000 to the host
+    depends_on: # Optional: ensures workers start before broker (though broker logic should handle unavailable workers)
+      - worker1
+      - worker2
+    networks:
+      - app-network
+
+  worker1:
+    build:
+      context: ./worker
+      dockerfile: Dockerfile
+    environment:
+      - WORKER_PORT=9001 # Configure port for this worker instance
+    # No ports exposed to host directly unless you need to access them for debugging
+    # The broker will access them via the Docker network using service names.
+    networks:
+      - app-network
+
+  worker2:
+    build:
+      context: ./worker # Reuses the same worker Dockerfile
+      dockerfile: Dockerfile
+    environment:
+      - WORKER_PORT=9002 # Configure port for this worker instance
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
