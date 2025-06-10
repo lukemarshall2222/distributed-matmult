@@ -20,10 +20,9 @@ pub struct MatMultRequest {
     pub right: Matrix,
 }
 
-// Custom error type for our application to simplify error handling in Warp
 #[derive(Debug)]
 pub struct AppError(pub String);
-// Custom error type for the worker (optional, but good practice)
+
 #[derive(Debug)]
 pub struct WorkerError(pub String);
 
